@@ -70,35 +70,37 @@
           view: view
         });
         view.ui.add(homeWidget, "top-left");
-        
+
+        //Search Widget
         const searchWidget = new Search({
           view: view
         });
-       
+       //Search Widget Collapse
          let sExpand = new Expand({
               view: view,
               content: searchWidget,
-              expanded: false,    // start collapsed
+              expanded: false,    //start collapsed
             });
 
             view.ui.add(sExpand, 
               {position: "top-left",
                index: 0
             });
-             
+        //Basemap Gallery     
         let basemapGallery = new BasemapGallery({
               view: view
             });
-
+        //Basemap Gallery Collapse
         let bgExpand = new Expand({
               view: view,
               content: basemapGallery,
-              icon: "basemap",   // icon shown when collapsed
-              expanded: false    // start collapsed
+              icon: "basemap",   //icon shown when collapsed
+              expanded: false    //start collapsed
             });
-
+            //Add widget to the bottom right corner of the view
             view.ui.add(bgExpand, "bottom-right");
-        
+
+      //Scale Bar  
       let scaleBar = new ScaleBar({
               view: view
             });
@@ -107,7 +109,7 @@
               position: "bottom-left"
             });
         
-        //Center point (Tokyo)
+        //Center point Tokyo
         const centerPoint = new Point({
           longitude: 139.7800,
           latitude: 35.6764,
@@ -124,7 +126,7 @@
           geometry: bufferGeometry,
           symbol: {
             type: "simple-fill",
-            color: [0, 120, 255, 0.2], // translucent blue
+            color: [0, 120, 255, 0.2], //Colour of Buffer
             outline: {
               color: [0, 120, 255, 0.8],
               width: 2
@@ -142,4 +144,5 @@
     </script>
   </body>
 </html>
+
 
