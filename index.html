@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>My ArcGIS JS Web Map</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+ 
+    <!-- ArcGIS JS CSS -->
+    <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+
+    <style>
+      html, body, #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+
+    <!-- ArcGIS JS -->
+    <script src="https://js.arcgis.com/4.29/"></script>
+ 
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+    
+    <script>
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/GraphicsLayer",
+        "esri/widgets/Sketch",
+        "esri/widgets/Home",
+        "esri/widgets/Search",
+        "esri/widgets/BasemapGallery",
+        "esri/widgets/Expand",
+        "esri/widgets/ScaleBar",
+        "esri/geometry/Point",
+        "esri/geometry/geometryEngine",
+        "esri/Graphic"
+      ], function (Map, MapView, GraphicsLayer, Sketch, Home, Search, BasemapGallery, Expand, ScaleBar, Point, geometryEngine, Graphic) {
+
+        // 1. Create the map
+        const map = new Map({
+          basemap: "streets-navigation-vector"
+         
+        });
+
+        // 2. Create the view
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [139.6500, 35.6764], // Tokyo
+          zoom: 10
+        });
+
+        // 3. Graphics layer for Sketch
+        const graphicsLayer = new GraphicsLayer();
+        map.add(graphicsLayer);
+
+        // 4. Sketch widget
+        const sketch = new Sketch({
+          view: view,
+          layer: graphicsLayer
+        });
+        view.ui.add(sketch, "top-right");
+
+        // 5. Home widget
+        const homeWidget = new Home({
+          view: view
+        });
+        view.ui.add(homeWidget, "top-left");
+        
+        const searchWidget = new Search({
+          view: view
+        });
+       
+         let sExpand = new Expand({
+              view: view,
+              content: searchWidget,
+              expanded: false,    // start collapsed
+            });
+
+            view.ui.add(sExpand, 
+              {position: "top-left",
+               index: 0
+            });
+             
+        let basemapGallery = new BasemapGallery({
+              view: view
+            });
+
+        let bgExpand = new Expand({
+              view: view,
+              content: basemapGallery,
+              icon: "basemap",   // icon shown when collapsed
+              expanded: false    // start collapsed
+            });
+
+            view.ui.add(bgExpand, "bottom-right");
+        
+      let scaleBar = new ScaleBar({
+              view: view
+            });
+            // Add widget to the bottom left corner of the view
+            view.ui.add(scaleBar, {
+              position: "bottom-left"
+            });
+        
+        //Center point (Tokyo)
+        const centerPoint = new Point({
+          longitude: 139.7800,
+          latitude: 35.6764,
+          spatialReference: view.spatialReference
+        });
+
+        //Create a 5 km buffer
+        const bufferGeometry = geometryEngine.geodesicBuffer(
+          centerPoint, 5, "kilometers"
+        );
+
+        //Buffer graphic
+        const bufferGraphic = new Graphic({
+          geometry: bufferGeometry,
+          symbol: {
+            type: "simple-fill",
+            color: [0, 120, 255, 0.2], // translucent blue
+            outline: {
+              color: [0, 120, 255, 0.8],
+              width: 2
+            }
+          }
+        });
+
+        //Add buffer to map
+        graphicsLayer.add(bufferGraphic);
+        
+      });
+      
+        
+     
+    </script>
+  </body>
+</html>
+
